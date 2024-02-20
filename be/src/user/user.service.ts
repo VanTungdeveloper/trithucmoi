@@ -1,59 +1,89 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { UserDto } from './dto/userDto.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './entities/user.entity';
-import { Repository } from 'typeorm';
-import { plainToInstance } from 'class-transformer';
+import { PrismaService } from '../prisma/prisma.service';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectRepository(User) private userRepo: Repository<User>) {}
+  constructor(
+    private prismaService: PrismaService,
+    private jwtService: JwtService,
+    private configService: ConfigService,
+  ) {}
 
-  async create(dto: UserDto): Promise<UserDto> {
-    const user = await this.userRepo.save(dto);
-    return plainToInstance(UserDto, user, {
-      excludeExtraneousValues: true,
-    });
-  }
+  async register(dto: UserDto) {
+    try {
+      //insert data to database
+      const user = await this.prismaService.user.create({
+        data: {
+          email: dto.email,
+          password: dto.password,
+          role: 'USER',
+        },
+        select: {
+          id: true,
+          email: true,
+          role: true,
+        },
+      });
 
-  async findAll(): Promise<UserDto[]> {
-    const users: User[] = await this.userRepo.find();
+      const token = await this.signJwtToken(user.id, user.email);
 
-    return plainToInstance(UserDto, users, {
-      excludeExtraneousValues: true,
-    });
-  }
-
-  async findOne(id: number): Promise<UserDto> {
-    const user = await this.userRepo.findOne({ where: { id } });
-    if (!user) {
-      throw new NotFoundException('User not found!');
+      return {
+        ...user,
+        ...token,
+      };
+    } catch (error) {
+      if (error.code == 'P2002') {
+        //throw new ForbiddenException(error.message)
+        //for simple
+        throw new ForbiddenException('User with this email already exists');
+      }
     }
-    return plainToInstance(UserDto, user, {
-      excludeExtraneousValues: true,
-    });
   }
 
-  async update(id: number, updateDto: UserDto): Promise<{ message: string }> {
-    const user = await this.userRepo.findOne({ where: { id } });
+  async login(dto: UserDto) {
+    const user = await this.prismaService.user.findFirst({
+      where: {
+        email: dto.email,
+      },
+    });
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new ForbiddenException('User not found');
     }
-    this.userRepo.update(id, updateDto);
+    const passwordMatched = user.password === dto.password;
+    if (!passwordMatched) {
+      throw new ForbiddenException('Incorrect password');
+    }
+
+    delete user.password;
+    const token = await this.signJwtToken(user.id, user.email);
+
     return {
-      message: 'update success!',
+      ...user,
+      ...token,
     };
   }
 
-  async remove(id: number) {
-    const user = await this.userRepo.findOne({ where: { id } });
-
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-    this.userRepo.remove(user);
+  async signJwtToken(
+    userId: number,
+    email: string,
+  ): Promise<{ accessToken: string }> {
+    const payload = {
+      sub: userId,
+      email,
+    };
+    const jwtString = await this.jwtService.signAsync(payload, {
+      expiresIn: '10m',
+      secret: this.configService.get('JWT_SECRET'),
+    });
     return {
-      message: 'Delete success!',
+      accessToken: jwtString,
     };
   }
 }

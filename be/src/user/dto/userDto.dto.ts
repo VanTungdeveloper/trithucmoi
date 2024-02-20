@@ -1,20 +1,13 @@
 import { Expose } from 'class-transformer';
-import { IsEmail, IsNotEmpty, Length } from 'class-validator';
+import { IsEmail, IsEnum, IsNotEmpty, Length } from 'class-validator';
 
 export class UserDto {
-  @Expose()
-  id: number;
-  @Expose()
+  id?: number;
+
   @IsEmail()
   email: string;
 
   @IsNotEmpty()
   @Length(8, 20)
   password: string;
-
-  address: string;
-  name: string;
-  age: number;
-  @Expose()
-  role: string;
 }
