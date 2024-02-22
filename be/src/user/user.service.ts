@@ -68,6 +68,18 @@ export class UserService {
     };
   }
 
+  async get() {
+    const users = await this.prismaService.user.findMany({
+      where: {},
+    });
+
+    users.map((user) => {
+      delete user.password;
+    });
+
+    return users;
+  }
+
   async signJwtToken(
     userId: number,
     email: string,
