@@ -1,23 +1,28 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Route, Router, Routes } from "react-router-dom";
 import HomeAdmin from "./pages/admin/Home";
-import Login from './pages/auth/Login';
-import Register from "./pages/auth/Register";
+import Login from "./pages/auth/Login";
 import HomeClient from "./pages/client/HomeClient";
+import { useState } from "react";
+import useToken from "./hooks/UseToken";
+import Register from "./pages/auth/Register";
 
+function App() {
+  const {token, saveToken } = useToken();
 
-  function App(){
+  if (!token) {
+    return <Login setToken={saveToken} />;
+  } else {
+  }
+
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<HomeClient  />} />
-        <Route path="admin" element = {<HomeAdmin  />}/>
-        <Route path="login" element={<Login  />} />
-        <Route path="register" element={<Register  />} />
-        
-      </Routes>
-    </BrowserRouter>
+    <Routes>
+      <Route path="/" element={<HomeClient />} />
+      <Route path="/home" element={<HomeClient />} />
+      {/* <Route path="/register" element={<Register setToken={null} />} /> */}
+      {/* <Route path="/login" element={<Login setToken={null} />} /> */}
+      <Route path="/admin" element={<HomeAdmin />} />
+    </Routes>
   );
-        };
-
+}
 
 export default App;

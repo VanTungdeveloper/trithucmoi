@@ -10,13 +10,24 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.3",
+    "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.15.10",
+    "@types/react-router-dom": "^5.3.3",
     "antd": "^5.14.1",
+    "axios": "^1.6.7",
+    "bootstrap": "^5.3.3",
+    "localforage": "^1.10.0",
+    "match-sorter": "^6.3.4",
+    "mdb-react-ui-kit": "^7.2.0",
     "react": "^18.2.0",
+    "react-bootstrap": "^2.10.1",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.22.1"
+    "react-router-dom": "^6.22.1",
+    "sort-by": "^1.2.0"
   },
   "devDependencies": {
-    "@types/react": "^18.2.55",
+    "@types/react": "^18.2.57",
     "@types/react-dom": "^18.2.19",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",

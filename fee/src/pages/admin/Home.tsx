@@ -10,7 +10,7 @@ const items = new Array(5).fill(null).map((_, index) => ({
 
 const HomeAdmin: React.FC = () => {
   const {
-    token: { colorBgContainer, borderRadiusLG },
+    token: { colorBgContainer },
   } = theme.useToken();
 
   return (
@@ -37,7 +37,6 @@ const HomeAdmin: React.FC = () => {
             background: colorBgContainer,
             minHeight: 280,
             padding: 24,
-            borderRadius: borderRadiusLG,
           }}
         >
           Content
