@@ -73,6 +73,7 @@ export class ProductService {
   }
 
   async update(id: number, updateDto: ProductDto) {
+    console.log(id);
     const product = this.prismaService.product.findUnique({
       where: {
         id,
@@ -81,7 +82,7 @@ export class ProductService {
     if (!product) {
       throw new ForbiddenException('Cannot find product to update');
     }
-    return this.prismaService.category.update({
+    return this.prismaService.product.update({
       where: {
         id,
       },
