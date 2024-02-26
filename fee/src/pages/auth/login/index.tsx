@@ -10,47 +10,43 @@ import {
   MDBIcon,
   MDBInput,
 } from "mdb-react-ui-kit";
-import "./login.css";
+import "./index.css";
 import { useState } from "react";
 
 interface Props {
-  setToken: any;
+  setToken: any
 }
 
 async function loginUser(credentials: any) {
-  return fetch("http://localhost:3000/user/register", {
-    method: "POST",
+  return fetch('http://localhost:3000/user/login', {
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json'
     },
-    body: JSON.stringify(credentials),
-  }).then((data) => data.json());
-}
+    body: JSON.stringify(credentials)
+  })
+    .then(data => data.json())
+ }
 
-function Register({ setToken }: Props) {
-  const [username, setUserName] = useState("");
-  const [password, setPassword] = useState("");
-  const [passwordConfirm, setPasswordConfirm] = useState("");
+const Login = ({setToken} :Props ) => {
+
+  const [username, setUserName] = useState('');
+  const [password, setPassword] = useState('');
 
   const handleSubmit = async (e: any) => {
-    if (password !== passwordConfirm) {
-      alert("Mat khau khong kop");
-    } else {
-      const req = {
-        email: username,
-        password,
-      };
-
-      e.preventDefault();
-      const token = await loginUser(req);
-      console.log(token);
-      setToken(token.accessToken);
-      window.location.href = '/home'
+    const req = {
+      email: username,
+      password
     }
-  };
+    e.preventDefault();
+    const res = await loginUser(req);
+    setToken(res.accessToken);
+    window.location.href = '/home'
+    
+  }
 
   return (
-    <MDBContainer className="my-5">
+    <MDBContainer className="my-5 wrapper">
       <MDBCard>
         <MDBRow className="g-0">
           <MDBCol md="6">
@@ -74,7 +70,7 @@ function Register({ setToken }: Props) {
                   fontWeight: "700",
                 }}
               >
-                Đăng ký
+                Đăng nhập
               </h3>
 
               <label htmlFor="" style={{ fontSize: "18px" }}>
@@ -84,38 +80,27 @@ function Register({ setToken }: Props) {
               <MDBInput
                 wrapperClass="mb-4"
                 id="formControlLg"
+                name="email"
                 type="email"
                 size="lg"
-                onChange={(e) => setUserName(e.target.value)}
+                onChange={e => setUserName(e.target.value)}
               />
 
               <label htmlFor="" style={{ fontSize: "18px" }}>
-                Mật khẩu
+                Password
               </label>
-
               <MDBInput
                 wrapperClass="mb-2"
                 id="formControlLg"
+                name="password"
                 type="password"
                 size="lg"
-                onChange={(e) => setPassword(e.target.value)}
-              />
-
-              <label htmlFor="" style={{ fontSize: "18px" }}>
-                Nhập lại mật khẩu!
-              </label>
-
-              <MDBInput
-                wrapperClass="mb-2"
-                id="formControlLg"
-                type="password"
-                size="lg"
-                onChange={(e) => setPasswordConfirm(e.target.value)}
+                onChange={e => setPassword(e.target.value)}
               />
 
               {/* <a className="small text-muted" href="#!">
-                Quên mật khẩu?
-              </a> */}
+              Quên mật khẩu?
+            </a> */}
 
               <MDBBtn
                 className="mb-4 px-5 mt-4"
@@ -126,14 +111,14 @@ function Register({ setToken }: Props) {
                 Đăng nhập
               </MDBBtn>
               <p className="mb-5 pb-lg-2" style={{ color: "#393f81" }}>
-                Đã có tài khoản? <Link to="/login">Đăng nhập</Link>{" "}
+                Chưa có tài khoản? <Link to="/register"  >Đăng ký</Link>
               </p>
             </MDBCardBody>
           </MDBCol>
 
           <MDBCol md="6">
             <MDBCardImage
-              src="https://burst.shopifycdn.com/photos/flatlay-iron-skillet-with-meat-and-other-food.jpg?width=1000&format=pjpg&exif=0&iptc=0"
+              src="https://cdn.pixabay.com/photo/2023/05/28/11/47/ai-generated-8023476_1280.jpg"
               alt="login form"
               className="rounded-start w-100 h-100"
               style={{ borderRadius: "5px" }}
@@ -145,4 +130,4 @@ function Register({ setToken }: Props) {
   );
 }
 
-export default Register;
+export default Login;
