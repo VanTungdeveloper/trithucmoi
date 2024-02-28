@@ -8,6 +8,7 @@ import {
   Delete,
   Put,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { ProductDto } from './dto/product.dto';
@@ -24,7 +25,6 @@ export class ProductController {
   }
 
   @Get()
-  @UseGuards(AuthGuard('jwt'))
   findAll() {
     return this.productService.findAll();
   }
@@ -40,7 +40,6 @@ export class ProductController {
   update(@Param('id') id: string, @Body() updateProductDto: ProductDto) {
     return this.productService.update(+id, updateProductDto);
   }
-
   @Delete(':id')
   @UseGuards(AuthGuard('jwt'))
   remove(@Param('id') id: string) {

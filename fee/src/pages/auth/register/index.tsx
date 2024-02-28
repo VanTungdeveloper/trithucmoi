@@ -42,8 +42,7 @@ const Register = ({ setToken }: Props) =>{
 
       e.preventDefault();
       const token = await loginUser(req);
-      console.log(token);
-      setToken(token.accessToken);
+      localStorage.setItem('token', JSON.stringify(token.accessToken));
       window.location.href = '/home'
     }
   };

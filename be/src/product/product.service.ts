@@ -6,6 +6,7 @@ import {
 import { ProductDto } from './dto/product.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
+import { Prisma, Product } from '@prisma/client';
 
 @Injectable()
 export class ProductService {
@@ -104,6 +105,23 @@ export class ProductService {
       where: {
         id: id,
       },
+    });
+  }
+
+  async getByCondition(params: {
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.ProductWhereUniqueInput;
+    where?: Prisma.ProductWhereInput;
+    orderBy?: Prisma.ProductOrderByWithRelationInput;
+  }): Promise<Product[]> {
+    const { skip, take, cursor, where, orderBy } = params;
+    return this.prismaService.product.findMany({
+      skip,
+      take,
+      cursor,
+      where,
+      orderBy,
     });
   }
 }

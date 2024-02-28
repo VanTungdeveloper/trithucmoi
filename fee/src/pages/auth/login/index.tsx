@@ -40,7 +40,8 @@ const Login = ({setToken} :Props ) => {
     }
     e.preventDefault();
     const res = await loginUser(req);
-    setToken(res.accessToken);
+    localStorage.setItem('token', JSON.stringify(res.accessToken));
+    // setToken(res.accessToken);
     window.location.href = '/home'
     
   }

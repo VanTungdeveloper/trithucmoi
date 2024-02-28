@@ -1,5 +1,5 @@
 import { Image } from 'antd';
-import Img from '../../assets/background.jpg';
+import Img from '../../../assets/Frame 7176.png';
 
 
 
@@ -28,7 +28,7 @@ function HomeClient() {
   // }, []);
 
   return (
-    <div style={{height: "2000px"}}>
+    <div>
       <Image
         style={{width: "100%"}}
         width={1700}

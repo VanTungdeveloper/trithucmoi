@@ -1,12 +1,13 @@
 import {
   ForbiddenException,
   Injectable,
-  NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { UserDto } from './dto/userDto.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -19,10 +20,11 @@ export class UserService {
   async register(dto: UserDto) {
     try {
       //insert data to database
+      const hash = await bcrypt.hash(dto.password, 10);
       const user = await this.prismaService.user.create({
         data: {
           email: dto.email,
-          password: dto.password,
+          password: hash,
           role: 'USER',
         },
         select: {
@@ -33,7 +35,6 @@ export class UserService {
       });
 
       const token = await this.signJwtToken(user.id, user.email);
-
       return {
         ...token,
       };
@@ -55,9 +56,10 @@ export class UserService {
     if (!user) {
       throw new ForbiddenException('User not found');
     }
-    const passwordMatched = user.password === dto.password;
-    if (!passwordMatched) {
-      throw new ForbiddenException('Incorrect password');
+
+    const isMatch = await bcrypt.compare(dto.password, user.password);
+    if (!isMatch) {
+      throw new UnauthorizedException('username or password incorrect!');
     }
 
     delete user.password;
@@ -89,7 +91,7 @@ export class UserService {
       email,
     };
     const jwtString = await this.jwtService.signAsync(payload, {
-      expiresIn: '10m',
+      expiresIn: '1000m',
       secret: this.configService.get('JWT_SECRET'),
     });
     return {
