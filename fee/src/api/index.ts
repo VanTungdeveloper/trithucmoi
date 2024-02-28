@@ -8,4 +8,6 @@ const getProduct = () => {
   return axios.get(`product`);
 };
 
+
+
 export { getCategory, getProduct };

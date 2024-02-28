@@ -109,7 +109,7 @@ function App() {
       <Foote />
 
       <Modal
-        title="Title"
+        title="Đăng suất"
         open={open}
         onOk={handleOk}
         confirmLoading={confirmLoading}
