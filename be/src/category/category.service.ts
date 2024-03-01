@@ -12,11 +12,6 @@ export class CategoryService {
         data: {
           name: dto.name,
         },
-        select: {
-          id: true,
-          name: true,
-          products: true,
-        },
       });
 
       return category;
@@ -28,11 +23,6 @@ export class CategoryService {
   async findAll(): Promise<CategoryDto[]> {
     const categories = await this.prismaService.category.findMany({
       where: {},
-      select: {
-        id: true,
-        name: true,
-        products: true,
-      },
     });
     return categories;
   }
@@ -41,11 +31,6 @@ export class CategoryService {
     const category = await this.prismaService.category.findUnique({
       where: {
         id,
-      },
-      select: {
-        id: true,
-        name: true,
-        products: true,
       },
     });
     return category;

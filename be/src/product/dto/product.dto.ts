@@ -16,7 +16,6 @@ export class ProductDto {
   @IsNotEmpty()
   count: number;
 
-  @IsNotEmpty()
   urlImg: string;
 
   @IsNotEmpty()

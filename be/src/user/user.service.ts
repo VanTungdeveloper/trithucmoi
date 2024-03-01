@@ -91,8 +91,13 @@ export class UserService {
       email,
     };
     const jwtString = await this.jwtService.signAsync(payload, {
-      expiresIn: '1000m',
+      expiresIn: '10m',
       secret: this.configService.get('JWT_SECRET'),
+    });
+
+    const refresh_token = await this.jwtService.signAsync(payload, {
+      secret: this.configService.get<string>('JWT_SECRET'),
+      expiresIn: '1000m',
     });
     return {
       accessToken: jwtString,

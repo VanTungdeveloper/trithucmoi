@@ -1,8 +1,4 @@
-import {
-  ForbiddenException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { ProductDto } from './dto/product.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
@@ -14,23 +10,10 @@ export class ProductService {
 
   async create(dto: ProductDto) {
     try {
+      console.log(dto);
       const product = await this.prismaService.product.create({
         data: {
-          name: dto.name,
-          price: dto.price,
-          description: dto.description,
-          count: dto.count,
-          urlImg: dto.urlImg,
-          categoryId: dto.categoryId,
-        },
-        select: {
-          id: true,
-          name: true,
-          price: true,
-          description: true,
-          count: true,
-          urlImg: true,
-          categoryId: true,
+          ...dto,
         },
       });
       return product;
@@ -42,15 +25,6 @@ export class ProductService {
   async findAll() {
     const products = await this.prismaService.product.findMany({
       where: {},
-      select: {
-        id: true,
-        name: true,
-        price: true,
-        description: true,
-        count: true,
-        urlImg: true,
-        categoryId: true,
-      },
     });
     return products;
   }
