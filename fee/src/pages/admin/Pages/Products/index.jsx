@@ -130,12 +130,12 @@ function Product() {
         //                                     <td>{data.count}</td>
         //                                     <td><img src={data.urlImg} alt="" /></td>
         //                                     <td>
-                                                // {dataSourceCate.map((dataCate)=>
-                                                //     {   if (data.categoryId === dataCate.id) {
-                                                //         return dataCate.name;
-                                                //         }
-                                                //     }
-                                                // )}
+        //                                         {dataSourceCate.map((dataCate)=>
+        //                                             {   if (data.categoryId === dataCate.id) {
+        //                                                 return dataCate.name;
+        //                                                 }
+        //                                             }
+        //                                         )}
         //                                     </td>
                                             
         //                                     <td>
@@ -206,7 +206,7 @@ function Product() {
                             okText="Yes"
                             cancelText="No"
                         >
-                            <button type="button" className="btn btn-danger" onClick={getId(record.id)}> Delete </button>
+                            <button type="button" className="btn btn-danger" onClick={() => getId(record.id)}> Delete </button>
                         </Popconfirm>
                     </Space>
                 )}

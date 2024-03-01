@@ -24,13 +24,16 @@ function Category() {
 
     const getId = (id) => {
         idCategory = id;
+        console.log('id',idCategory);
     };
 
     const confirm = () => {
         deleteCategory(idCategory);
+        console.log('id delete',idCategory);
        
     };
     const cancel = () => {
+        console.log('id delete',idCategory);
         message.error('Canceled!');
     };
 
@@ -143,8 +146,9 @@ function Category() {
                                 okText="Yes"
                                 cancelText="No" 
                             >
-                                <button type="button" className="btn btn-danger" onClick={getId(record.id)}> Delete </button>
+                               <button type="button" className="btn btn-danger" onClick={() => getId(record.id)}> Delete </button>
                             </Popconfirm>
+
                         </Space>
                     )}
                 />

@@ -1,5 +1,6 @@
 import { Typography } from "antd";
 function AdminFooter() {
+    
     return(
         <div className="AdminFooter">
             <Typography.Link href="tel:+123456789">+123456789</Typography.Link>

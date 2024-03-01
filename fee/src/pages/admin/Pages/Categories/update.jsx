@@ -1,5 +1,5 @@
-import { Button, Form } from 'antd';
-import { useState, useEffect } from "react";
+import { Button, notification, Form} from 'antd';
+import React, { useState, useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 
 function UpdateCategory() {
@@ -54,7 +54,7 @@ function UpdateCategory() {
             console.log(data);
             console.log(data.name);
             
-            window.location.href = "http://localhost:5173/admin/category";
+            // window.location.href = "http://localhost:5173/admin/admin/category";
     };   
 
     const layout = {
@@ -65,6 +65,33 @@ function UpdateCategory() {
           span: 16,
         },
       };
+
+      const Context = React.createContext({
+        name: name,
+        exName: cateUpdate.name,
+      });
+
+    const [api, contextHolder] = notification.useNotification();
+    const openNotificationWithIcon = (type) => {   
+        api[type]({
+            message: `Successful`,
+            description: <Context.Consumer>{({ name, exName }) => `Updated ${name} to ${exName}!`}</Context.Consumer>,
+        });
+    };
+    
+    const contextValue = useMemo(
+      () => ({
+        name: 'Ant Design',
+      }),
+      [],
+    );
+
+    const handleClick = (id) => {
+        updateCategory(id);
+        openNotificationWithIcon('success');
+        
+        setTimeout("location.href = 'http://localhost:5173/admin/admin/category';",900);
+    }
 
     return (
         // <Space size={20} direction="vertical">
@@ -89,7 +116,8 @@ function UpdateCategory() {
         //     </div>
         // </Space>
 
-        <div>
+        <div value={contextValue}>
+            {contextHolder}
              <h4 className='title-page'>Update Category</h4>
              <Form className='form-admin'>
            
@@ -114,7 +142,7 @@ function UpdateCategory() {
                     }}
                 >
                     <Button type="default" htmlType="button" 
-                            style={{width:120}} onClick={() => updateCategory(id)}>
+                            style={{width:120}} onClick={() => handleClick(id)}>
                         Update
                     </Button>
                 </Form.Item>

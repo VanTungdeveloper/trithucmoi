@@ -11,20 +11,25 @@ import DashBoard from "./pages/admin/Pages/Dashboard";
 import Category from "./pages/admin/Pages/Categories/index.jsx";
 import Product from "./pages/admin/Pages/Products";
 import User from "./pages/admin/Pages/Users";
+import ProductPage from "./pages/client/page/Product/index.tsx";
+import ContactPage from "./pages/client/page/Contact/index.tsx";
+import HomeClient from "./pages/client/Home.tsx";
 
 const token = localStorage.getItem("token");
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
+  <>
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="/home" element={<App />} />
+        <Route path="/*" element={<HomeClient />} />
+        <Route path="/home/*" element={<HomeClient />} />
         <Route path="/login" element={<Login setToken={null} />} />
         <Route path="/register" element={<Register setToken={null} />} />
+        <Route path="home/menu/*" element={<ProductPage />} />
+        <Route path="home/contact/*" element={<ContactPage />} />
         {token ?
           <>
-            <Route path="/*" element={<HomeAdmin />} />
+            <Route path="/admin/*" element={<HomeAdmin />} />
             <Route path="dashboard" element={< DashBoard />} />
             <Route path="category" element={< Category />} />
             <Route path="product" element={< Product />} />
@@ -36,5 +41,5 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         }
       </Routes>
     </BrowserRouter>
-  </React.StrictMode>
+  </>
 );

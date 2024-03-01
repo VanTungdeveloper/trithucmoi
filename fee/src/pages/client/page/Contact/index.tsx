@@ -13,9 +13,11 @@ import {
   Button,
 } from "antd";
 import { Content } from "antd/es/layout/layout";
-import Img from "../../../assets/voi-nhung-cong-cu-rat-huu-ich-ban-da-co-the-in-truc-tiep-ngay-tren-google-map.jpg";
+import Img from "../../../../assets/voi-nhung-cong-cu-rat-huu-ich-ban-da-co-the-in-truc-tiep-ngay-tren-google-map.jpg";
 import { AimOutlined } from "@ant-design/icons";
 import { useState } from "react";
+import ClientHeader from "../../components/ClientHeader";
+import ClientFooter from "../../components/ClientFooter";
 
 type SizeType = Parameters<typeof Form>[0]["size"];
 
@@ -29,7 +31,9 @@ function ContactPage() {
   };
 
   return (
-    <Layout style={{ display: "flex" }}>
+    <div>
+      <div>
+      <Layout style={{ display: "flex" }}>
       <Content
         style={{
           margin: "24px 16px",
@@ -181,6 +185,9 @@ function ContactPage() {
         </div>
       </Content>
     </Layout>
+      </div>
+    </div>
+    
   );
 }
 

@@ -1,5 +1,5 @@
-import { Space, Typography, Button, Form, Select } from 'antd';
-import { useState, useEffect } from "react";
+import { Button, Divider, notification, Space, Form, Alert, message } from 'antd';
+import React, { useState, useEffect, useMemo } from "react";
 import "../../Home.css";
 // import Product from "./index";
 
@@ -60,7 +60,7 @@ function AddProduct() {
             .catch(er => console.log(er))
 
             console.log(data);
-            window.location.href = "http://localhost:5173/admin/product";
+            // window.location.href = "http://localhost:5173/admin/admin/product";
     };  
 
     const handleFileChange = (event) => {
@@ -77,13 +77,39 @@ function AddProduct() {
         wrapperCol: {
           span: 16,
         },
-      };
+    };
+
+    const Context = React.createContext({
+        name: name,
+      });
+
+    const [api, contextHolder] = notification.useNotification();
+    const openNotificationWithIcon = (type) => {   
+        api[type]({
+            message: `Successfully`,
+            description: <Context.Consumer>{({ name }) => `Added ${name} product!`}</Context.Consumer>,
+        });
+    };
+    
+    const contextValue = useMemo(
+      () => ({
+        name: 'Ant Design',
+      }),
+      [],
+    );
+
+    const handleClick = () => {
+        addProduct();
+        openNotificationWithIcon('success');
+        
+        // setTimeout("location.href = 'http://localhost:5173/admin/admin/category';",3000);
+    }
 
     return (
         // <Space size={20} direction="vertical">
             
         //     <div>
-                // <Typography.Title level={4}>Categories</Typography.Title>
+        //         <Typography.Title level={4}>Categories</Typography.Title>
         //         <div className="App">
         //             <div className="infomation">
         //                 <label>Name:</label>
@@ -121,23 +147,24 @@ function AddProduct() {
         //                 />
 
         //                 <label>Category:</label>
-                        // <select onChange={(event) => {
-                        //         setCategoryId(event.target.value);
-                        //         }}
-                        // >   
-                        //     <option></option>
-                        //     {dataSourceCate.map((dataCate, index)=>
-                        //         <option value={dataCate.id} id="idCate" key={index}>{dataCate.name}</option>
-                        //     )}
+        //                 <select onChange={(event) => {
+        //                         setCategoryId(event.target.value);
+        //                         }}
+        //                 >   
+        //                     <option></option>
+        //                     {dataSourceCate.map((dataCate, index)=>
+        //                         <option value={dataCate.id} id="idCate" key={index}>{dataCate.name}</option>
+        //                     )}
                             
-                        // </select>
+        //                 </select>
         //                 <button type="submit" className="btn btn-primary" onClick={() => addProduct()}> Add New Product </button>
         //             </div>
         //         </div>
         //     </div>
         // </Space>
         
-        <div>
+        <div value={contextValue}>
+            {contextHolder}
              <h4 className='title-page'>Add New Product</h4>
              <Form className='form-admin'>
            
@@ -242,7 +269,7 @@ function AddProduct() {
                 }}
                 >
                     <Button type="default" htmlType="button" 
-                            style={{width:120}} onClick={() => addProduct()}>
+                            style={{width:120}} onClick={() => handleClick()}>
                         Add
                     </Button>
                 </Form.Item>

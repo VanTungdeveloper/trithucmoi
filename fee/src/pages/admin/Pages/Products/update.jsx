@@ -1,5 +1,5 @@
-import { Button, Form, Space } from "antd";
-import { useState, useEffect } from "react";
+import { Button, notification, Form, Space} from 'antd';
+import React, { useState, useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 
 function UpdateProduct() {
@@ -110,7 +110,7 @@ function UpdateProduct() {
         })
             .then(res => res.json());
             console.log(data);
-            window.location.href = "http://localhost:5173/admin/product";
+            // window.location.href = "http://localhost:5173/admin/admin/product";
     };   
 
     const layout = {
@@ -128,6 +128,33 @@ function UpdateProduct() {
         }
     };
     console.log('img', urlImg);    
+
+    const Context = React.createContext({
+        name: name,
+      });
+
+    const [api, contextHolder] = notification.useNotification();
+    const openNotificationWithIcon = (type) => {   
+        api[type]({
+            message: `Successful`,
+            description: <Context.Consumer>{({ name }) => `Updated ${name} products!`}</Context.Consumer>,
+        });
+    };
+    
+    const contextValue = useMemo(
+      () => ({
+        name: 'Ant Design',
+      }),
+      [],
+    );
+
+    const handleClick = (id) => {
+        updateProduct(id);
+        openNotificationWithIcon('success');
+        
+        setTimeout("location.href = 'http://localhost:5173/admin/admin/product';",900);
+    }
+
 
     return (
         // <Space size={20} direction="vertical">
@@ -194,7 +221,8 @@ function UpdateProduct() {
         // </Space>
 
     <Space size={20} direction="vertical">
-        <div>
+        <div value={contextValue}>
+            {contextHolder}
             <h4 className='title-page'>Update Product</h4>
             <Form className='form-admin'>
         
@@ -291,7 +319,7 @@ function UpdateProduct() {
                     }}
                 >
                     <Button type="default" htmlType="button" 
-                            style={{width:120}} onClick={() => updateProduct(id)}>
+                            style={{width:120}} onClick={() => handleClick(id)}>
                         Update
                     </Button>
                 </Form.Item>
