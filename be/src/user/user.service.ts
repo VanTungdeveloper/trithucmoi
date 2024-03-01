@@ -36,6 +36,7 @@ export class UserService {
 
       const token = await this.signJwtToken(user.id, user.email);
       return {
+        ...user,
         ...token,
       };
     } catch (error) {
@@ -85,7 +86,7 @@ export class UserService {
   async signJwtToken(
     userId: number,
     email: string,
-  ): Promise<{ accessToken: string }> {
+  ): Promise<{ accessToken: string; refeshToken: string }> {
     const payload = {
       sub: userId,
       email,
@@ -101,6 +102,7 @@ export class UserService {
     });
     return {
       accessToken: jwtString,
+      refeshToken: refresh_token,
     };
   }
 }
