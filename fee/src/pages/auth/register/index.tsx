@@ -26,7 +26,7 @@ async function loginUser(credentials: any) {
   }).then((data) => data.json());
 }
 
-const Register = ({ setToken }: Props) =>{
+const Register = () =>{
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
@@ -41,8 +41,8 @@ const Register = ({ setToken }: Props) =>{
       };
 
       e.preventDefault();
-      const token = await loginUser(req);
-      localStorage.setItem('token', JSON.stringify(token.accessToken));
+      const res = await loginUser(req);
+      localStorage.setItem('user', JSON.stringify(res));
       window.location.href = '/home'
     }
   };

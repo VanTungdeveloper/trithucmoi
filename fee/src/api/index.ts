@@ -8,4 +8,8 @@ const getProduct = () => {
   return axios.get(`product`);
 };
 
-export { getCategory, getProduct };
+const createUser = (body: any) => {
+  return axios.post(`user/register`, body);
+};
+
+export { getCategory, getProduct, createUser };

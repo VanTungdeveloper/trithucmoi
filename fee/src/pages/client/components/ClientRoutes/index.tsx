@@ -11,8 +11,8 @@ function ClientRoutes() {
     <Routes >
         <Route path="/" element={< App />} />
         <Route path="/home" element={< HomeClient />} />
-        <Route path="/login" element={< Login setToken={null} />} />
-        <Route path="/register" element={< Register setToken={null} />} />
+        <Route path="/login" element={< Login  />} />
+        <Route path="/register" element={< Register  />} />
         <Route path="/menu" element={< ProductPage />} />
         <Route path="/contact" element={< ContactPage />} />
     </Routes>

@@ -14,37 +14,38 @@ import "./index.css";
 import { useState } from "react";
 
 interface Props {
-  setToken: any
+  setToken: any;
 }
 
 async function loginUser(credentials: any) {
-  return fetch('http://localhost:3000/user/login', {
-    method: 'POST',
+  return fetch("http://localhost:3000/user/login", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json'
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(credentials)
-  })
-    .then(data => data.json())
- }
+    body: JSON.stringify(credentials),
+  }).then((data) => data.json());
+}
 
-const Login = ({setToken} :Props ) => {
-
-  const [username, setUserName] = useState('');
-  const [password, setPassword] = useState('');
+const Login = () => {
+  const [username, setUserName] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleSubmit = async (e: any) => {
     const req = {
       email: username,
-      password
-    }
+      password,
+    };
     e.preventDefault();
     const res = await loginUser(req);
-    localStorage.setItem('token', JSON.stringify(res.accessToken));
-    // setToken(res.accessToken);
-    window.location.href = '/home'
-    
-  }
+    localStorage.setItem("user", JSON.stringify(res));
+
+    if (res.role === "ADMIN") {
+      window.location.href = "/admin";
+    } else {
+      window.location.href = "/home";
+    }
+  };
 
   return (
     <MDBContainer className="my-5 wrapper">
@@ -84,7 +85,7 @@ const Login = ({setToken} :Props ) => {
                 name="email"
                 type="email"
                 size="lg"
-                onChange={e => setUserName(e.target.value)}
+                onChange={(e) => setUserName(e.target.value)}
               />
 
               <label htmlFor="" style={{ fontSize: "18px" }}>
@@ -96,7 +97,7 @@ const Login = ({setToken} :Props ) => {
                 name="password"
                 type="password"
                 size="lg"
-                onChange={e => setPassword(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
               />
 
               {/* <a className="small text-muted" href="#!">
@@ -112,7 +113,7 @@ const Login = ({setToken} :Props ) => {
                 Đăng nhập
               </MDBBtn>
               <p className="mb-5 pb-lg-2" style={{ color: "#393f81" }}>
-                Chưa có tài khoản? <Link to="/register"  >Đăng ký</Link>
+                Chưa có tài khoản? <Link to="/register">Đăng ký</Link>
               </p>
             </MDBCardBody>
           </MDBCol>
@@ -129,6 +130,6 @@ const Login = ({setToken} :Props ) => {
       </MDBCard>
     </MDBContainer>
   );
-}
+};
 
 export default Login;

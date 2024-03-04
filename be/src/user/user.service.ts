@@ -92,7 +92,7 @@ export class UserService {
       email,
     };
     const jwtString = await this.jwtService.signAsync(payload, {
-      expiresIn: '365d',
+      expiresIn: '30m',
       secret: this.configService.get('JWT_SECRET'),
     });
 

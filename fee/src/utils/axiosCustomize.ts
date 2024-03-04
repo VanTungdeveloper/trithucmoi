@@ -8,12 +8,12 @@ instance.interceptors.request.use(
   function (config: AxiosRequestConfig) {
     // Do something before request is sent
 
-    const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem("user"));
 
-    if (token) {
+    if (user) {
       config.headers = {
         ...config.headers,
-        Authorization: `Bearer ${JSON.parse(token)}`,
+        Authorization: `Bearer ${user.accessToken}`,
       };
     }
     return config;
