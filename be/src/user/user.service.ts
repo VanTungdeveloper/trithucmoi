@@ -67,6 +67,7 @@ export class UserService {
     const token = await this.signJwtToken(user.id, user.email);
 
     return {
+      ...user,
       ...token,
     };
   }
