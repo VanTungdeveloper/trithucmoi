@@ -1,6 +1,8 @@
 import {React} from "react";
 import { useCart } from "react-use-cart";
-import Header from "../../components/ClientHeader"
+import Header from "../../components/ClientHeader";
+import ProductPage from "../Product/index"
+
 
 const Cart = () => {
     const {
@@ -63,6 +65,7 @@ const Cart = () => {
                 </div>
                 <div hidden>
                     <Header totalItems={totalItems}/>
+                    <ProductPage totalItems={totalItems}/>
                 </div>
                 
             </div>

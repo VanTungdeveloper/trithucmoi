@@ -1,18 +1,16 @@
-import { Button, Card, Carousel, Image, Layout, List, Pagination } from "antd";
+import { Button, Card, Image, Layout, List, Pagination } from "antd";
 import Img from "../../../../assets/-Pngtree-healthy food_3776802 1 (2).png";
-// import Img1 from "../../../assets/istockphoto-1191080960-612x612.jpg";
 import Search from "antd/es/input/Search";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { getCategory, getProduct } from "../../../../api/index.js";
-import { CartProvider, useCart } from "react-use-cart";
+import { CartProvider } from "react-use-cart";
 import ItemCard from "../Cart/Itemcard.jsx";
-import ClientHeader from "../../components/ClientHeader/index.jsx";
-import ClientFooter from "../../components/ClientFooter/index.jsx";
 
 function ProductPage() {
   const [loading, setLoading] = useState(true);
   const [categories, setCategory] = useState([]);
   const [products, setProducts] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState();
 
   const callApi = async () => {
     const dataCategories = await getCategory();
@@ -26,6 +24,30 @@ function ProductPage() {
     callApi();
     setLoading(true);
   }, []);
+
+  // Function to get filtered list
+  function getFilteredList() {
+    // Avoid filter when selectedCategory is null
+    if (!selectedCategory) {
+    return products;
+    }
+    return products.filter((item) => item.categoryId === selectedCategory);
+  }
+
+  // Avoid duplicate function calls with useMemo
+  const filteredList = useMemo(getFilteredList, [selectedCategory, products]);
+
+  function handleCategoryChange(idCate) {
+      setSelectedCategory(idCate);
+  }
+
+  const [page, setPage] = useState(1);
+
+
+  const handleChange = (e, p) => {
+    // console.log(e, p);
+    setPage(p);
+  }
 
   return (
     <>
@@ -55,43 +77,77 @@ function ProductPage() {
         </div>
 
         <Layout className="layout" style={{ padding: 20 }}>
-          <List
-            grid={{ gutter: 16, column: categories.length }}
-            dataSource={categories}
-            style={{ justifyContent: "center", display: "flex" }}
-            renderItem={(item) => (
-              <List.Item style={{ width: "100%" }}>
-                <Card
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    flexDirection: "column",
-                    backgroundColor: "#F9ECD4",
-                  }}
-                >
-                  <Image width={70} src={Img} preview={false} />
-                  <p
-                    style={{
-                      marginTop: 10,
-                      marginBottom: 0,
-                      textAlign: "center",
-                    }}
-                  >
-                    {item.name}
-                  </p>
-                </Card>
-              </List.Item>
-            )}
-          />
           
-          <CartProvider>
-            < ItemCard />
-          </CartProvider>
+          <div className="nav-category" style={{ display: "flex", justifyContent: "center"}}>
+            <Button className="btn btn-default"   
+                  style={{ justifyContent: "center", display: "flex", height: "141px", 
+                            margin: "0px 27px 15px 0px", backgroundColor: "#F9ECD4",
+                            border:"1px solid #c6c6ec", width: "118px", alignSelf: "center" }}
+                            onClick={() => {handleCategoryChange("")}} >
+                {/* <Image style={{width: "70px"}} src={Img} preview={false} /> */}
+                <span style={{paddingTop:"85px"}}> ALL PRODUCT </span>
+                  
+            </Button>
+           
+            <List
+              grid={{ gutter: 16, column: categories.length }}
+              dataSource={categories}
+              style={{ justifyContent: "center", display: "flex" }}
+              renderItem={(item) => (
+                <button 
+                        className="btn btn-default"
+                        name="category-list"
+                        id="category-list"
+                        onClick={() => {handleCategoryChange(item.id)}}
+                >
 
+                  <List.Item style={{ width: "100%"}}>
+                    <Card
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        flexDirection: "column",
+                        backgroundColor: "#F9ECD4",
+                      }}
+                    >
+                      <Image width={70} src={Img} preview={false} />
+                      <p
+                        style={{
+                          marginTop: 10,
+                          marginBottom: 0,
+                          textAlign: "center",
+                          textTransform: "uppercase",
+                        }}
+                      >
+                        {item.name}
+                      </p>
+                    </Card>
+                  </List.Item>
+                </button>              
+              )}
+            />
+          </div>
+          
+          
+          
+          <List className="list-item"
+                  grid={{ gutter: 24, column: 5 }}
+                  style={{ margin: 10, padding: 10 }}
+                  dataSource={filteredList}
+                  renderItem={(element, index) => (
+                    <CartProvider>
+                      <List.Item>
+                        <ItemCard {...element} key={index} />
+                      </List.Item>
+                    </CartProvider> 
+                  )}                
+          />    
+          
           <Pagination
             style={{ textAlign: "center" }}
             defaultCurrent={1}
-            total={50}
+            // total={totalItems}
+            onChange={handleChange}
           />
         </Layout>
       </div>

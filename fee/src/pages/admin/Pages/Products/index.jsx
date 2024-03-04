@@ -64,6 +64,7 @@ function Product() {
             .then(res => res.json());
 
             console.log(data);
+            console.log('Token', token);
             setDataSource(data);
 
     };

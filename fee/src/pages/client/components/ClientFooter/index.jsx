@@ -1,7 +1,3 @@
-import {  Layout } from 'antd';
-
-// const {Footer} = Layout;
-
 function ClientFooter() {
   return (
     <div className='ClientFooter' style={{ textAlign: "center", backgroundColor: "black", color: "#fff" }}>

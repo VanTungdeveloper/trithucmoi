@@ -4,17 +4,14 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Cart from "../../page/Cart/Cart";
 import { CartProvider } from "react-use-cart";
 import { ProductOutlined, ShopOutlined, PhoneOutlined, LogoutOutlined, ShoppingCartOutlined } from "@ant-design/icons";
+import Itemcard from "../../page/Cart/Itemcard";
 
-// const { Header } = Layout;
-
-function ClientHeader({totalItems}) {
+function ClientHeader() {
 
     const token = localStorage.getItem("token");
 
     const location = useLocation();
     const [selectedKeys, setSelectedKeys] = useState('/');
-
-    console.log("totalItems", totalItems); 
 
     useEffect(() => { 
         const pathName = location.pathname;
@@ -26,6 +23,7 @@ function ClientHeader({totalItems}) {
     const [open, setOpen] = useState(false);
     const [openCart, setOpenCart] = useState(false);
     const [confirmLoading, setConfirmLoading] = useState(false);
+    const [countItems, setCountItems] = useState(0);
 
     const showModal = () => {
         setOpen(true);
@@ -59,7 +57,7 @@ function ClientHeader({totalItems}) {
     const afterClose = () => {
         window.location.href = "http://localhost:5173/menu";
     };
-   
+
     return(
         <Layout className="layout">
             <div className="ClientHeader"
@@ -69,6 +67,9 @@ function ClientHeader({totalItems}) {
                 backgroundColor: "#fff",
             }}
             >
+                <div hidden>
+                    <Itemcard countItems = {countItems}/>
+                </div>
             <h3
                 className="logo"
                 style={{
@@ -107,11 +108,11 @@ function ClientHeader({totalItems}) {
                         },
                     ]}
                 ></Menu>
-            <div style={{ paddingTop:8}} >
+            <div style={{ paddingTop:8}}>
                 {token ? (
                 <>  
                     <Button icon={<ShoppingCartOutlined />} style={{ margin: 10, border:"none" }} onClick={showCart}>
-                        {/* &#160; {totalItems}  */}
+                        &#160;{countItems}
                     </Button>
 
                     <Button type="primary" icon={<LogoutOutlined />} danger onClick={showModal}>

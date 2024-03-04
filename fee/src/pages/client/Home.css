@@ -33,3 +33,7 @@
     padding: 21px 30px 12px 30px;
     background-color: #F2F2F2;
 }
+
+.item {
+    width: 50%;
+}
