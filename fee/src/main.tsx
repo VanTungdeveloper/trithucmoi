@@ -27,10 +27,10 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         {user && user.role === "ADMIN" && (
           <>
             <Route path="/admin/*" element={<HomeAdmin />} />
-            <Route path="dashboard" element={<DashBoard />} />
-            <Route path="category" element={<Category />} />
-            <Route path="product" element={<Product />} />
-            <Route path="user" element={<User />} />
+            <Route path="/dashboard" element={<DashBoard />} />
+            <Route path="/category" element={<Category />} />
+            <Route path="/product" element={<Product />} />
+            <Route path="/user" element={<User />} />
           </>
         )}
       </Routes>

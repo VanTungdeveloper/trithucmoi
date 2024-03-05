@@ -11,11 +11,12 @@ function UpdateProduct() {
   const [description, setDescription] = useState("");
   const [count, setCount] = useState(0);
   const [urlImg, setUrlImg] = useState("");
-  const [categoryId, setCategoryId] = useState(0);
+  const [categoryId, setCategoryId] = useState();
 
   const [dataSourceCate, setDataSourceCate] = useState([]);
   const [productUpdate, setProductUpdate] = useState({});
-  const [cateName, setCateName] = useState("");
+  const [imagePreview, setImagePreview] = useState("");
+  const [categoryName, setcategoryName] = useState("");
 
   const findOneProduct = async (id) => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -36,40 +37,19 @@ function UpdateProduct() {
     setCount(data.count);
     setUrlImg(data.urlImg);
     setCategoryId(data.categoryId);
-    setIdCate(data.categoryId);
-
-    console.log("SetName: ", name);
-
-    console.log("Product: ", productUpdate);
-  };
-
-  const findOneCategory = async (id) => {
-    const token = JSON.parse(localStorage.getItem("token"));
-
-    const data = await fetch("http://localhost:3000/category/" + id, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
-      },
-    }).then((res) => res.json());
-
-    setCateName(data.name);
-
-    console.log("Cate Name: ", cateName);
+    setcategoryName(data.category.name);
   };
 
   const getCategory = async () => {
-    const token = JSON.parse(localStorage.getItem("token"));
+    const user = JSON.parse(localStorage.getItem("user"));
 
     const data = await fetch("http://localhost:3000/category", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
+        Authorization: "Bearer " + user.accessToken,
       },
     }).then((res) => res.json());
-    console.log("dataCate", data);
     setDataSourceCate(data);
   };
 
@@ -77,29 +57,29 @@ function UpdateProduct() {
     setLoading(true);
     findOneProduct(id);
     getCategory();
-    findOneCategory(productUpdate.categoryId);
     setLoading(false);
-  }, [id, productUpdate.categoryId]);
+  }, []);
 
   const updateProduct = async (idProduct) => {
-    const token = JSON.parse(localStorage.getItem("token"));
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    const urlData = new FormData();
+    urlData.append("urlImg", urlImg);
+    urlData.append("name", name);
+    urlData.append("price", parseInt(price));
+    urlData.append("description", description);
+    urlData.append("count", count);
+    urlData.append("categoryId", parseInt(categoryId));
+
     const data = await fetch("http://localhost:3000/product/" + idProduct, {
       method: "PUT",
       headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
+        Authorization: "Bearer " + user.accessToken,
       },
-      body: JSON.stringify({
-        name: name,
-        price: parseInt(price),
-        description: description,
-        count: parseInt(count),
-        urlImg: urlImg,
-        categoryId: parseInt(categoryId),
-      }),
-    }).then((res) => res.json());
-    console.log(data);
-    // window.location.href = "http://localhost:5173/admin/admin/product";
+      body: urlData,
+    })
+      .then((res) => res.json())
+      .catch((er) => console.log(er));
   };
 
   const layout = {
@@ -113,10 +93,9 @@ function UpdateProduct() {
 
   const handleFileChange = (event) => {
     if (event.target.files) {
-      setUrlImg(event.target.files[0].name);
+      setUrlImg(event.target.files[0]);
     }
   };
-  console.log("img", urlImg);
 
   const Context = React.createContext({
     name: name,
@@ -152,69 +131,6 @@ function UpdateProduct() {
   };
 
   return (
-    // <Space size={20} direction="vertical">
-
-    //     <div>
-    //         <Typography.Title level={4}>Products</Typography.Title>
-    //         <div className="App">
-    //             <div className="infomation">
-    //                 <label>Name:</label>
-    //                 <input type="text"
-    //                         defaultValue={productUpdate.name}
-    //                         onChange={(event) => {
-    //                         setName(event.target.value);
-    //                     }}
-    //                 />
-
-    //                 <label>Price:</label>
-    //                 <input type="number"
-    //                         defaultValue={productUpdate.price}
-    //                         onChange={(event) => {
-    //                         setPrice(event.target.value);
-    //                     }}
-    //                 />
-
-    //                 <label>Description:</label>
-    //                 <input type="text"
-    //                         defaultValue={productUpdate.description}
-    //                         onChange={(event) => {
-    //                         setDescription(event.target.value);
-    //                     }}
-    //                 />
-
-    //                 <label>Count:</label>
-    //                 <input type="number"
-    //                         defaultValue={productUpdate.count}
-    //                         onChange={(event) => {
-    //                         setCount(event.target.value);
-    //                     }}
-    //                 />
-
-    //                 <label>Image:</label>
-    //                 <input type="text"
-    //                         defaultValue={productUpdate.urlImg}
-    //                         onChange={(event) => {
-    //                         setUrlImg(event.target.value);
-    //                     }}
-    //                 />
-
-    //                 <label>Category:</label>
-    //                 <select
-    //                         onChange={(event) => {
-    //                         setCategoryId(event.target.value);
-    //                         }}
-    //                 >
-    //                     {dataSourceCate.map((dataCate, index)=>
-    //                         <option value={dataCate.id} id="idCate" key={index}>{dataCate.name}</option>
-    //                     )}
-
-    //                 </select>
-    //                 <button type="button" className="btn btn-primary" onClick={() => updateProduct(id)}> Update Product </button>
-    //             </div>
-    //         </div>
-    //     </div>
-    // </Space>
-
     <Space size={20} direction="vertical">
       <div value={contextValue}>
         {contextHolder}
@@ -267,7 +183,7 @@ function UpdateProduct() {
 
           <Form.Item label="Image" rules={[{ required: true }]}>
             <input type="file" id="file" onChange={handleFileChange} />
-            <img height={60} width={60} src={productUpdate.urlImg} />
+            <img height={60} width={60} src={urlImg} />
           </Form.Item>
 
           <Form.Item
@@ -280,12 +196,15 @@ function UpdateProduct() {
                 setCategoryId(event.target.value);
               }}
             >
-              <option>{cateName}</option>
-              {dataSourceCate.map((dataCate, index) => (
-                <option value={dataCate.id} id="idCate" key={index}>
-                  {dataCate.name}
-                </option>
-              ))}
+              <option>{categoryName}</option>
+              {dataSourceCate.map(
+                (dataCate, index) =>
+                  dataCate.name != categoryName && (
+                    <option value={dataCate.id} key={index}>
+                      {dataCate.name}
+                    </option>
+                  )
+              )}
             </select>
           </Form.Item>
 

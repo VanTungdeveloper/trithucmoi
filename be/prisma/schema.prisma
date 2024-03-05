@@ -16,12 +16,18 @@ model User {
   email String
   password String
   role String
+  createdAt DateTime @default(now())
+	updatedAt DateTime @updatedAt
+  deletedAt DateTime?
 }
 
 model Category{
   id Int    @id @default(autoincrement()) 
   name String 
   products Product[]
+  createdAt DateTime @default(now())
+	updatedAt DateTime @updatedAt
+  deletedAt DateTime?
 }
 
 model Product {
@@ -33,4 +39,7 @@ model Product {
   urlImg String
   categoryId  Int
   category Category @relation(fields: [categoryId], references: [id])
+  createdAt DateTime @default(now())
+	updatedAt DateTime @updatedAt
+  deletedAt DateTime?
 }

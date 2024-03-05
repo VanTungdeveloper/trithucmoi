@@ -15,7 +15,6 @@ function AddUser() {
       email,
       password,
     });
-    console.log(data);
     if (data.accessToken) {
       openNotificationWithIcon("success");
       window.location.href = "http://localhost:5173/admin/admin/user";

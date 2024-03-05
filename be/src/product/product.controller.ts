@@ -113,18 +113,3 @@ export class ProductController {
     return this.productService.remove(+id);
   }
 }
-
-// @UseInterceptors(
-//   FileInterceptor('urlImg', {
-//     storage: diskStorage({
-//       destination: './upload',
-//       filename(
-//         req: e.Request,
-//         file: Express.Multer.File,
-//         callback: (error: Error | null, filename: string) => void,
-//       ) {
-//         callback(null, file.originalname);
-//       },
-//     }),
-//   }),
-// )  `

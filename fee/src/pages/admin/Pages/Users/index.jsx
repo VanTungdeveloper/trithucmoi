@@ -1,12 +1,12 @@
-import { Table, Typography, Space, Popconfirm } from "antd";
+import { Table, Typography, Space, Popconfirm, message } from "antd";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 function User() {
   const [loading, setLoading] = useState(false);
   const [dataSource, setDataSource] = useState([]);
-  const navigate = useNavigate();
   const { Column, ColumnGroup } = Table;
+  const navigate = useNavigate();
 
   const getUser = async () => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -19,49 +19,38 @@ function User() {
       },
     }).then((res) => res.json());
 
-    console.log(data);
     setDataSource(data);
   };
 
-  useEffect(() => {
+  const deleteUser = async (id) => {
+    console.log(id);
+    const user = JSON.parse(localStorage.getItem("user"));
+    const data = await fetch("http://localhost:3000/user/" + id, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + user.accessToken,
+      },
+    }).then((res) => res.json());
+  };
+
+  const confirm = (id) => {
+    setLoading(false);
+    deleteUser(id);
+    message.success("Deleted!");
     setLoading(true);
+  };
+
+  const handleCancel = () => {
+    message.error("Canceled!");
+  };
+
+  useEffect(() => {
     getUser();
     setLoading(false);
   }, []);
 
   return (
-    // <Space size={20} direction="vertical">
-
-    //     <div>
-    //         <Typography.Title level={4}>Users</Typography.Title>
-
-    //         <div className="justify-content-center align-items-center">
-    //             <div className="w-50 bg-white rounded">
-    //                 <table className="table">
-    //                     <thead>
-    //                         <tr>
-    //                             <th>Id</th>
-    //                             <th>Email</th>
-    //                             <th>Role</th>
-    //                         </tr>
-    //                     </thead>
-    //                     <tbody>
-
-    //                         {
-    //                             dataSource.map((data, index)=> (
-    //                                 <tr key={index}>
-    //                                     <td>{data.id}</td>
-    //                                     <td>{data.email}</td>
-    //                                     <td>{data.role}</td>
-    //                                 </tr>
-    //                             ))
-    //                         }
-    //                     </tbody>
-    //                 </table>
-    //             </div>
-    //         </div>
-    //     </div>
-    // </Space>
     <div>
       <div className="App">
         <div className="infomation">
@@ -88,15 +77,11 @@ function User() {
           key="action"
           render={(_, record) => (
             <Space size="middle">
-              <button type="button" className="btn btn-info">
-                {" "}
-                Update{" "}
-              </button>
               <Popconfirm
                 title="Delete the product"
-                description="Are you sure to delete this product?"
-                // onConfirm={confirm}
-                // onCancel={cancel}
+                description="Are you sure to delete this user?"
+                onConfirm={() => confirm(record.id)}
+                onCancel={handleCancel}
                 okText="Yes"
                 cancelText="No"
               >

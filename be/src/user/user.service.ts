@@ -8,6 +8,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
+import { use } from 'passport';
 
 @Injectable()
 export class UserService {
@@ -72,7 +73,7 @@ export class UserService {
     };
   }
 
-  async get() {
+  async getAll() {
     const users = await this.prismaService.user.findMany({
       where: {},
     });
@@ -82,6 +83,60 @@ export class UserService {
     });
 
     return users;
+  }
+
+  async get(id: number) {
+    const user = await this.prismaService.user.findUnique({
+      where: { id },
+    });
+
+    if (!user) {
+      throw new ForbiddenException('User not found');
+    }
+
+    return user;
+  }
+
+  async update(id: number, dto: UserDto) {
+    const user = await this.prismaService.user.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!user) {
+      throw new ForbiddenException('User not found');
+    }
+
+    console.log(dto);
+    return this.prismaService.user.update({
+      where: {
+        id,
+      },
+      data: {
+        email: dto.email ? dto.email : user.email,
+        password: (await bcrypt.hash(dto.password, 10))
+          ? await bcrypt.hash(dto.password, 10)
+          : user.password,
+      },
+    });
+  }
+
+  async delete(id: number) {
+    const user = await this.prismaService.user.findUnique({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!user) {
+      throw new ForbiddenException('User not found');
+    }
+    return this.prismaService.user.delete({
+      where: {
+        id: user.id,
+      },
+    });
   }
 
   async signJwtToken(

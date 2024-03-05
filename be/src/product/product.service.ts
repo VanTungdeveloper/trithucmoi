@@ -34,14 +34,8 @@ export class ProductService {
       where: {
         id,
       },
-      select: {
-        id: true,
-        name: true,
-        count: true,
-        price: true,
-        description: true,
-        urlImg: true,
-        categoryId: true,
+      include: {
+        category: true,
       },
     });
     return product;

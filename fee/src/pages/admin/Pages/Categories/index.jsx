@@ -22,15 +22,12 @@ function Category() {
 
   const getId = (id) => {
     idCategory = id;
-    console.log("id", idCategory);
   };
 
   const confirm = () => {
     deleteCategory(idCategory);
-    console.log("id delete", idCategory);
   };
   const cancel = () => {
-    console.log("id delete", idCategory);
     message.error("Canceled!");
   };
 
@@ -56,12 +53,12 @@ function Category() {
   }, []);
 
   const deleteCategory = async (id) => {
-    const token = JSON.parse(localStorage.getItem("token"));
+    const user = JSON.parse(localStorage.getItem("user"));
     const data = await fetch("http://localhost:3000/category/" + id, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
+        Authorization: "Bearer " + user.accessToken,
       },
     }).then((res) => res.json());
 
@@ -72,48 +69,6 @@ function Category() {
   };
 
   return (
-    // <Space size={20} direction="vertical">
-
-    //     <div>
-    //         <Typography.Title level={4}>Categories</Typography.Title>
-    //         <div className="App">
-    //             <div className="infomation">
-    //                 <button type="button" className="btn btn-info" onClick={() => {navigate("add");}}> Add New Catergory </button>
-    //             </div>
-    //         </div>
-
-    //         <div className="justify-content-center align-items-center">
-    //             <div className="w-50 bg-white rounded">
-    //                 <table className="table">
-    //                     <thead>
-    //                         <tr>
-    //                             <th>Id</th>
-    //                             <th>Name</th>
-    //                             <th>Action</th>
-    //                         </tr>
-    //                     </thead>
-    //                     <tbody>
-
-    //                         {
-    //                             dataSource.map((data, index)=> (
-    //                                 <tr key={index}>
-    //                                     <td>{data.id}</td>
-    //                                     <td>{data.name}</td>
-    //                                     <td>
-    //                                         <button type="button" className="btn btn-info" onClick={() => {navigate("" + data.id);}}> Update </button>
-    //                                         <button type="button" className="btn btn-danger" onClick={() => deleteCategory(data.id)}> Delete </button>
-    //                                     </td>
-    //                                 </tr>
-    //                             ))
-    //                         }
-
-    //                     </tbody>
-
-    //                 </table>
-    //             </div>
-    //         </div>
-    //     </div>
-    // </Space>
     <div>
       <div className="App">
         <div className="infomation">

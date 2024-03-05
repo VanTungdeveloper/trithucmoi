@@ -13,9 +13,6 @@ import {
 import "./index.css";
 import { useState } from "react";
 
-interface Props {
-  setToken: any;
-}
 
 async function loginUser(credentials: any) {
   return fetch("http://localhost:3000/user/login", {
@@ -31,7 +28,10 @@ const Login = () => {
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
 
+  const [passwordError, setPasswordError] = useState("");
+
   const handleSubmit = async (e: any) => {
+
     const req = {
       email: username,
       password,
@@ -42,8 +42,12 @@ const Login = () => {
 
     if (res.role === "ADMIN") {
       window.location.href = "/admin";
-    } else {
+    }
+    if (res.role === "USER") {
       window.location.href = "/home";
+    }
+    if(res.statusCode === 400){
+      setPasswordError("Username or passwor incorrect!")
     }
   };
 
@@ -85,6 +89,7 @@ const Login = () => {
                 name="email"
                 type="email"
                 size="lg"
+                required
                 onChange={(e) => setUserName(e.target.value)}
               />
 
@@ -97,8 +102,10 @@ const Login = () => {
                 name="password"
                 type="password"
                 size="lg"
+                required
                 onChange={(e) => setPassword(e.target.value)}
               />
+              <p style={{color: "red"}}>{passwordError}</p>
 
               {/* <a className="small text-muted" href="#!">
               Quên mật khẩu?

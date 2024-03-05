@@ -12,4 +12,11 @@ const createUser = (body: any) => {
   return axios.post(`user/register`, body);
 };
 
-export { getCategory, getProduct, createUser };
+const updateUser = (id: number, body: any) => {
+  return axios.put("user/" + id, body);
+};
+const deleteUser = (id: number) => {
+  return axios.delete("user/" + id);
+};
+
+export { getCategory, getProduct, createUser, updateUser, deleteUser };

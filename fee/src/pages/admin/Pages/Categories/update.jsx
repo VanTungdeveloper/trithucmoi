@@ -33,12 +33,12 @@ function UpdateCategory() {
   }, [id]);
 
   const updateCategory = async (idCate) => {
-    const token = JSON.parse(localStorage.getItem("token"));
+    const user = JSON.parse(localStorage.getItem("user"));
     const data = await fetch("http://localhost:3000/category/" + idCate, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
+        Authorization: "Bearer " + user.accessToken,
       },
       body: JSON.stringify({
         name: name,
@@ -95,28 +95,6 @@ function UpdateCategory() {
   };
 
   return (
-    // <Space size={20} direction="vertical">
-
-    //     <div>
-    //         <Typography.Title level={4}>Categories</Typography.Title>
-    //         <div className="App">
-    //             <div className="infomation">
-    //                 <label>Name: </label>
-
-    //                 <input type="text"
-    //                         defaultValue={cateUpdate.name}
-    //                         onChange={(event) => {
-    //                             setName(event.target.value);
-
-    //                     }}
-    //                 />
-
-    //                 <button type="button" className="btn btn-primary" onClick={() => updateCategory(id)}> Update Category </button>
-    //             </div>
-    //         </div>
-    //     </div>
-    // </Space>
-
     <div value={contextValue}>
       {contextHolder}
       <h4 className="title-page">Update Category</h4>

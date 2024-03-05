@@ -56,28 +56,9 @@ function AddCategory() {
   const handleClick = () => {
     addCategory();
     openNotificationWithIcon("success");
-
-    // setTimeout("location.href = 'http://localhost:5173/admin/admin/category';",3000);
   };
 
   return (
-    // <Space size={20} direction="vertical">
-
-    //     <div>
-    //         <Typography.Title level={4}>Categories</Typography.Title>
-    //         <div className="App">
-    //             <div className="infomation">
-    //                 <label>Name:</label>
-    //                 <input type="text"
-    //                         onChange={(event) => {
-    //                         setName(event.target.value);
-    //                     }}
-    //                 />
-    //                 <button type="button" className="btn btn-primary" onClick={() => addCategory()}> Add New Category </button>
-    //             </div>
-    //         </div>
-    //     </div>
-    // </Space>
     <div value={contextValue}>
       {contextHolder}
       <h4 className="title-page"> Add New Category </h4>

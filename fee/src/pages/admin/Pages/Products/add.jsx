@@ -44,36 +44,34 @@ function AddProduct() {
   }, []);
 
   const addProduct = async () => {
-    const token = JSON.parse(localStorage.getItem("token"));
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    const urlData = new FormData();
+    urlData.append("urlImg", urlImg);
+    urlData.append("name", name);
+    urlData.append("price", parseInt(price));
+    urlData.append("description", description);
+    urlData.append("count", count);
+    urlData.append("categoryId", parseInt(categoryId));
 
     const data = await fetch("http://localhost:3000/product", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
+        Authorization: "Bearer " + user.accessToken,
       },
-      body: JSON.stringify({
-        name: name,
-        price: parseInt(price),
-        description: description,
-        count: parseInt(count),
-        urlImg: urlImg,
-        categoryId: parseInt(categoryId),
-      }),
+      body: urlData,
     })
       .then((res) => res.json())
       .catch((er) => console.log(er));
 
-    console.log(data);
-    // window.location.href = "http://localhost:5173/admin/admin/product";
+    window.location.href = "http://localhost:5173/admin/admin/product";
   };
 
   const handleFileChange = (event) => {
     if (event.target.files) {
-      setUrlImg(event.target.files[0].name);
+      setUrlImg(event.target.files[0]);
     }
   };
-  console.log("img", urlImg);
 
   const layout = {
     labelCol: {
@@ -115,63 +113,6 @@ function AddProduct() {
   };
 
   return (
-    // <Space size={20} direction="vertical">
-
-    //     <div>
-    //         <Typography.Title level={4}>Categories</Typography.Title>
-    //         <div className="App">
-    //             <div className="infomation">
-    //                 <label>Name:</label>
-    //                 <input type="text"
-    //                         onChange={(event) => {
-    //                         setName(event.target.value);
-    //                     }}
-    //                 />
-
-    //                 <label>Price:</label>
-    //                 <input type="number"
-    //                         onChange={(event) => {
-    //                         setPrice(event.target.value);
-    //                     }}
-    //                 />
-
-    //                 <label>Description:</label>
-    //                 <input type="text"
-    //                         onChange={(event) => {
-    //                         setDescription(event.target.value);
-    //                     }}
-    //                 />
-
-    //                 <label>Count:</label>
-    //                 <input type="number"
-    //                         onChange={(event) => {
-    //                         setCount(event.target.value);
-    //                     }}
-    //                 />
-
-    //                 <label>Image:</label>
-    //                 <input type="file"
-    //                         id="file"
-    //                         onChange={handleFileChange}
-    //                 />
-
-    //                 <label>Category:</label>
-    //                 <select onChange={(event) => {
-    //                         setCategoryId(event.target.value);
-    //                         }}
-    //                 >
-    //                     <option></option>
-    //                     {dataSourceCate.map((dataCate, index)=>
-    //                         <option value={dataCate.id} id="idCate" key={index}>{dataCate.name}</option>
-    //                     )}
-
-    //                 </select>
-    //                 <button type="submit" className="btn btn-primary" onClick={() => addProduct()}> Add New Product </button>
-    //             </div>
-    //         </div>
-    //     </div>
-    // </Space>
-
     <div value={contextValue}>
       {contextHolder}
       <h4 className="title-page">Add New Product</h4>
@@ -258,7 +199,6 @@ function AddProduct() {
               setCategoryId(event.target.value);
             }}
           >
-            <option></option>
             {dataSourceCate.map((dataCate, index) => (
               <option value={dataCate.id} id="idCate" key={index}>
                 {dataCate.name}

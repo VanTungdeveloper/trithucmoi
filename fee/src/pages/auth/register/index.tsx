@@ -10,7 +10,7 @@ import {
   MDBIcon,
   MDBInput,
 } from "mdb-react-ui-kit";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface Props {
   setToken: any;
@@ -26,26 +26,51 @@ async function loginUser(credentials: any) {
   }).then((data) => data.json());
 }
 
-const Register = () =>{
+const Register = () => {
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [dataSource, setDataSource] = useState([]);
+
+  const [errorMessage, setErrorMessage] = useState("")
+
+  const validEmail = dataSource.find((i) => i.email === username);
 
   const handleSubmit = async (e: any) => {
     if (password !== passwordConfirm) {
-      alert("Mat khau khong kop");
-    } else {
+      setErrorMessage("Mật khẩu không khớp");
+    } else if(password.length !== 8){
+      setErrorMessage("Mật khẩu phải dài trên 8 kí tự");
+    }else if(validEmail){
+      setErrorMessage("Email đã tồn tại")
+    }else {
       const req = {
         email: username,
         password,
       };
-
+      
       e.preventDefault();
       const res = await loginUser(req);
       localStorage.setItem('user', JSON.stringify(res));
       window.location.href = '/home'
     }
   };
+
+
+  const getUser = async () => {
+    const data = await fetch("http://localhost:3000/user", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((res) => res.json());
+
+    setDataSource(data);
+  };
+
+  useEffect(() => {
+    getUser()
+  }, [])
 
   return (
     <MDBContainer className="my-5">
@@ -84,6 +109,7 @@ const Register = () =>{
                 id="formControlLg"
                 type="email"
                 size="lg"
+                required
                 onChange={(e) => setUserName(e.target.value)}
               />
 
@@ -96,6 +122,7 @@ const Register = () =>{
                 id="formControlLg"
                 type="password"
                 size="lg"
+                required
                 onChange={(e) => setPassword(e.target.value)}
               />
 
@@ -108,9 +135,11 @@ const Register = () =>{
                 id="formControlLg"
                 type="password"
                 size="lg"
+                required
                 onChange={(e) => setPasswordConfirm(e.target.value)}
               />
 
+              <p style={{color: "red"}}>{errorMessage}</p>
               {/* <a className="small text-muted" href="#!">
                 Quên mật khẩu?
               </a> */}
